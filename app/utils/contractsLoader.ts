@@ -42,3 +42,9 @@ export async function contractsLoader() {
         throw error;
     }
 }
+
+// Reset cache til bruk i testing så cache ikke fylles med data fra forrige test
+export function resetCache() {
+    cache = null;
+    cacheTimestamp = null;
+}
