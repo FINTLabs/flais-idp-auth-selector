@@ -37,10 +37,40 @@ describe("contractsLoader", () => {
 
     it('should throw an error if fetch fails', async () => {
         global.fetch = jest.fn(() =>
-        Promise.reject(new Error("Failed to fetch contracts from IDP"))
+            Promise.reject(new Error("Failed to fetch contracts from IDP"))
         );
 
         await expect(contractsLoader()).rejects.toThrow("Failed to fetch contracts from IDP");
+    });
+
+    it('should return cache on subsequent calls', async () => {
+        const mockResponse = [
+            {
+                displayName: "Contract 1",
+                cardId: "cardId1",
+                type: "COMMON",
+                image: {base64: "", mimeType: ""},
+            }
+        ];
+
+        const fetchMock = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () =>
+                    Promise.resolve(mockResponse),
+            } as Response)
+        );
+
+        global.fetch = fetchMock;
+
+        const firstCall = await contractsLoader();
+        expect (fetchMock).toHaveBeenCalledTimes(1);
+        expect (firstCall).toEqual(mockResponse);
+
+        const secondCall = await contractsLoader();
+        expect (fetchMock).toHaveBeenCalledTimes(1);
+        expect (secondCall).toEqual(mockResponse);
+
     });
 });
 
