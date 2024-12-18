@@ -64,14 +64,66 @@ describe("contractsLoader", () => {
         global.fetch = fetchMock;
 
         const firstCall = await contractsLoader();
-        expect (fetchMock).toHaveBeenCalledTimes(1);
-        expect (firstCall).toEqual(mockResponse);
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(firstCall).toEqual(mockResponse);
 
         const secondCall = await contractsLoader();
-        expect (fetchMock).toHaveBeenCalledTimes(1);
-        expect (secondCall).toEqual(mockResponse);
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(secondCall).toEqual(mockResponse);
 
     });
+
+    it('should refresh the cache after CACHE_TTL expires', async () => {
+        const mockResponse1 = [
+            {
+                displayName: "Contract 1",
+                cardId: "cardId1",
+                type: "COMMON",
+                image: {base64: "", mimeType: ""},
+            }
+        ];
+        const mockResponse2 = [
+            {
+                displayName: "Contract 2",
+                cardId: "cardId2",
+                type: "CUSTOMER",
+                image: {base64: "", mimeType: ""},
+            }
+        ];
+
+        let now = Date.now();
+        jest.spyOn(global.Date, "now").mockImplementation(() => now);
+
+        const fetchMock = jest.fn() as jest.MockedFunction<typeof fetch>;
+        fetchMock
+            .mockResolvedValueOnce({
+                ok: true,
+                json: () =>
+                    Promise.resolve(mockResponse1),
+            } as Response)
+            .mockResolvedValueOnce({
+                    ok: true,
+                    json: () =>
+                        Promise.resolve(mockResponse2),
+                } as Response
+            );
+
+        global.fetch = fetchMock;
+
+        const firstCall = await contractsLoader();
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(firstCall).toEqual(mockResponse1);
+
+        now += 30 * 1000;
+        const secondCall = await contractsLoader();
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(secondCall).toEqual(mockResponse1);
+
+        now += 31 * 1000;
+        const thirdCall = await contractsLoader();
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+        expect(thirdCall).toEqual(mockResponse2);
+
+        jest.restoreAllMocks();
+    })
 });
-
-
