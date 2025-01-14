@@ -15,7 +15,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
                                                       setSelectedContract
                                                   }) => {
     const [isOpen, setIsOpen] = useState(false);
-    console.log(contracts);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -79,9 +78,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
             )}
 
 
-                <p className="w-full text-left pr-4 py-2 mt-5 text-base text-gray-700 hover:bg-gray-100 flex items-center">
-                    Andre påloggingsalternativer:
-                </p>
+            <p className="w-full text-left pr-4 py-2 mt-5 text-base text-gray-700 hover:bg-gray-100 flex items-center">
+                Andre påloggingsalternativer:
+            </p>
             {contracts
                 .filter((item) => item.type === "COMMON")
                 .map((item) => (
@@ -101,21 +100,26 @@ interface DropdownItemProps {
     children?: React.ReactNode;
 }
 
-const DropdownItem: React.FC<DropdownItemProps> = ({contract, text, onSelect}) => (
-    <li>
-        <button
-            className="w-full text-left px-4 py-2 text-base text-gray-700 hover:bg-gray-100 flex items-center"
-            onClick={onSelect}
-        >
-            {contract?.image && (
-                <img
-                    src={`data:${contract.image.mimeType};base64,${contract.image.base64Image}`}
-                    alt={contract.displayName}
-                    className="w-10 h-10 mr-3 rounded-full"
-                />
-            )}
+const DropdownItem: React.FC<DropdownItemProps> = ({contract, text, onSelect}) => {
+    if (!contract && !text) {
+        throw new Error("DropdownItem må ha enten 'contract' eller 'text'");
+    }
+    return (
+        <li>
+            <button
+                className="w-full text-left px-4 py-2 text-base text-gray-700 hover:bg-gray-100 flex items-center"
+                onClick={onSelect}
+            >
+                {contract?.image && (
+                    <img
+                        src={`data:${contract.image.mimeType};base64,${contract.image.base64Image}`}
+                        alt={contract.displayName}
+                        className="w-10 h-10 mr-3 rounded-full"
+                    />
+                )}
 
-            {text || contract?.displayName}
-        </button>
-    </li>
-);
+                {text || contract?.displayName}
+            </button>
+        </li>
+    );
+};
