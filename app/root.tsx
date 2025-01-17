@@ -8,7 +8,7 @@ import {
 
 import "./tailwind.css";
 import "@navikt/ds-css/dist/index.css";
-import {Box, HStack, Page} from "@navikt/ds-react";
+import {Page} from "@navikt/ds-react";
 
 export function Layout() {
     return (
