@@ -2,7 +2,7 @@ export type Contract = {
     displayName: string;
     cardId: string;
     image: {
-        base64: string;
+        base64Image: string;
         mimeType: string;
     }
     type: string;
