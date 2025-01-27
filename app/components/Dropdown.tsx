@@ -10,12 +10,17 @@ interface DropdownProps {
     setSelectedContract: (contract: Contract | null) => void;
 }
 
+type RedirectResponse = {
+    url: string;
+}
+
 export const Dropdown: React.FC<DropdownProps> = ({
                                                       contracts,
                                                       selectedContract,
                                                       setSelectedContract
                                                   }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const fetcher = useFetcher<RedirectResponse>();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -31,6 +36,25 @@ export const Dropdown: React.FC<DropdownProps> = ({
             document.removeEventListener("mousedown", handleClickOutside);
         }
     }, []);
+
+    const handleRedirect = () => {
+        if (!selectedContract) {
+            console.log("No contract selected");
+            return;
+        }
+
+        fetcher.submit(
+            {
+                id: selectedContract?.cardId || "",
+                target: "https://idp.felleskomponent.no/nidp/saml2/spsend",
+                sid: "123"
+            },
+            {
+                method: "post",
+                action: "/contract/redirect"
+            }
+        );
+    };
 
     return (
         <div className="dropdown-container relative inline-block text-left">
