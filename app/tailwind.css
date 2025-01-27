@@ -4,9 +4,22 @@
 
 html,
 body {
-  @apply bg-white text-black;
+    @apply bg-white text-black;
 
-  @media (prefers-color-scheme: light) {
-    color-scheme: light;
-  }
+    @media (prefers-color-scheme: light) {
+        color-scheme: light;
+    }
+}
+
+.purple-heading.navds-heading {
+    font-weight: 900;
+    font-size: 2.875rem;
+    line-height: 2.875rem;
+    color: #8c1950;
+    margin-bottom: 1rem;
+}
+
+.italic-heading.navds-heading {
+    font-style: italic;
+    font-weight: 400;
 }

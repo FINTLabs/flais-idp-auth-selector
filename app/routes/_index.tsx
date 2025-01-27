@@ -1,10 +1,9 @@
 import type {MetaFunction} from "@remix-run/node";
 import {useLoaderData} from "@remix-run/react";
 import {contractsLoader, Contract} from "~/utils/contractsLoader";
-import {Box} from "@navikt/ds-react";
 import {useState} from "react";
-import {Logo} from "~/components/Logo";
 import {Dropdown} from "~/components/Dropdown";
+import {Header} from "~/components/Header";
 
 export const meta: MetaFunction = () => {
     return [
@@ -40,14 +39,12 @@ export default function Index() {
                     textAlign: "center",
                 }}
             >
-                <Box padding="5" maxWidth="text" as="article">
-                    <Logo src="/images/novari_logo_small.png" width={250}/>
-                    <Dropdown
-                        contracts={contracts}
-                        selectedContract={selectedContract}
-                        setSelectedContract={setSelectedContract}
-                    />
-                </Box>
+                <Header />
+                <Dropdown
+                    contracts={contracts}
+                    selectedContract={selectedContract}
+                    setSelectedContract={setSelectedContract}
+                />
             </div>
         </div>
     );
