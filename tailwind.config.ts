@@ -5,18 +5,19 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: [
-          "Inter",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "Segoe UI Symbol",
-          "Noto Color Emoji",
-        ],
+        sans: ['Nunito Sans', 'sans-serif',],
       },
     },
   },
-  plugins: [],
+  plugins: [
+      function ({ addBase }: { addBase: (styles: Record<string, any>) => void }) {
+          addBase({
+              body: {
+                  '@apply font-sans antialiased': {},
+                  '-webkit-font-smoothing': 'antialiased',
+                  '-moz-osx-font-smoothing': 'grayscale',
+              },
+          })
+      }
+  ],
 } satisfies Config;

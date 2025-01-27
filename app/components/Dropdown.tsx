@@ -1,6 +1,7 @@
 import {Contract} from "~/utils/contractsLoader";
 import React, {useEffect, useState} from "react";
-import {Button} from "@navikt/ds-react";
+import {Box, Button, Link, Checkbox} from "@navikt/ds-react";
+import {useFetcher} from "@remix-run/react";
 
 
 interface DropdownProps {
@@ -55,8 +56,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
             </button>
 
             {isOpen && (
-                <div className="absolute mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                    <ul className="py-1">
+                <Box as="div" className="absolute w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                    <Box as="ul" className="py-1">
                         <DropdownItem
                             text="Velg tilhørlighet"
                             onSelect={() => setIsOpen(false)}
@@ -73,22 +74,33 @@ export const Dropdown: React.FC<DropdownProps> = ({
                                     }}
                                 />
                             ))}
-                    </ul>
-                </div>
+                    </Box>
+                </Box>
             )}
 
+            <Box>
+                <Checkbox value="remember_me" className="mt-5">Husk meg</Checkbox>
+            </Box>
+            <Button className="w-full">Fortsett</Button>
 
-            <p className="w-full text-left pr-4 py-2 mt-5 text-base text-gray-700 hover:bg-gray-100 flex items-center">
+            <Box as="p" className="w-full text-left font-bold pr-4 py-2 mt-5 text-base text-gray-700 hover:bg-gray-100 flex items-center">
                 Andre påloggingsalternativer:
-            </p>
+            </Box>
+
             {contracts
                 .filter((item) => item.type === "COMMON")
                 .map((item) => (
-                    <Button key={item.cardId} className="w-full">
-                        {item.displayName}
-                    </Button>
+                    <Link as="button" key={item.cardId} className="w-full text-left pr-4 py-1 text-base text-gray-700 hover:bg-gray-100 flex items-center uppercase" onClick={handleRedirect} style={{ textDecoration: "none", color: "black"}}>
+                        {item.image && <img src={`data:${item.image.mimeType};base64,${item.image.base64Image}`} alt={item.displayName} className="w-8 h-8 mr-2"/>}{item.displayName}
+                    </Link>
                 ))
             }
+
+            {fetcher.data?.url && (
+                <a href={fetcher.data.url} target="_blank" rel="noopener noreferrer">
+                    Gå til: {fetcher.data.url}
+                </a>
+            )}
         </div>
     );
 };
@@ -121,5 +133,6 @@ const DropdownItem: React.FC<DropdownItemProps> = ({contract, text, onSelect}) =
                 {text || contract?.displayName}
             </button>
         </li>
+
     );
 };
