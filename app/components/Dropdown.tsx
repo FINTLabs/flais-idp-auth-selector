@@ -37,15 +37,16 @@ export const Dropdown: React.FC<DropdownProps> = ({
         }
     }, []);
 
-    const handleRedirect = () => {
-        if (!selectedContract) {
-            console.log("No contract selected");
-            return;
+    useEffect(() => {
+        if (fetcher.data?.url) {
+            window.location.href = fetcher.data.url;
         }
+    }, [fetcher.data]);
 
+    const handleRedirect = (contract: Contract) => {
         fetcher.submit(
             {
-                id: selectedContract?.cardId || "",
+                id: contract.cardId,
                 target: "https://idp.felleskomponent.no/nidp/saml2/spsend",
                 sid: "123"
             },
@@ -114,7 +115,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             {contracts
                 .filter((item) => item.type === "COMMON")
                 .map((item) => (
-                    <Link as="button" key={item.cardId} className="w-full text-left pr-4 py-1 text-base text-gray-700 hover:bg-gray-100 flex items-center uppercase" onClick={handleRedirect} style={{ textDecoration: "none", color: "black"}}>
+                    <Link as="button" key={item.cardId} className="w-full text-left pr-4 py-1 text-base text-gray-700 hover:bg-gray-100 flex items-center uppercase" onClick={() =>handleRedirect(item)} style={{ textDecoration: "none", color: "black"}}>
                         {item.image && <img src={`data:${item.image.mimeType};base64,${item.image.base64Image}`} alt={item.displayName} className="w-8 h-8 mr-2"/>}{item.displayName}
                     </Link>
                 ))
