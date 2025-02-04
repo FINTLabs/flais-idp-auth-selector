@@ -2,6 +2,7 @@ import {Contract} from "~/utils/contractsLoader";
 import React, {useEffect, useState} from "react";
 import {Box, Button, Link, Checkbox} from "@navikt/ds-react";
 import {useFetcher} from "@remix-run/react";
+import {useCookies} from "react-cookie";
 
 
 interface DropdownProps {
@@ -20,6 +21,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
                                                       setSelectedContract
                                                   }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [cookies, setCookie] = useCookies(['organistation', "rememberMe"]);
+    const [rememberMe, setRememberMe] = useState<boolean>(cookies.rememberMe === 'true');
     const fetcher = useFetcher<RedirectResponse>();
 
     useEffect(() => {
@@ -56,6 +59,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
             }
         );
     };
+
+    const handleRememberMe = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRememberMe(event.target.checked);
+        setCookie('rememberMe', event.target.checked, {maxAge: 31556926})
+    }
 
     return (
         <div className="dropdown-container relative inline-block text-left">
@@ -104,7 +112,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
             )}
 
             <Box>
-                <Checkbox value="remember_me" className="mt-5">Husk meg</Checkbox>
+                <Checkbox
+                    className="mt-5"
+                    checked={rememberMe}
+                    onChange={handleRememberMe}
+                    disabled={!selectedContract}
+                    name="rememberMe">Husk meg</Checkbox>
             </Box>
             <Button className="w-full">Fortsett</Button>
 
