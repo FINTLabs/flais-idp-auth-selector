@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {Box, Button, Link, Checkbox} from "@navikt/ds-react";
 import {useFetcher} from "@remix-run/react";
 import {useCookies} from "react-cookie";
+import useQuery from "~/hooks/useQuery";
 
 
 interface DropdownProps {
@@ -13,6 +14,7 @@ interface DropdownProps {
 
 type RedirectResponse = {
     url: string;
+    sid: string;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -20,8 +22,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
                                                       selectedContract,
                                                       setSelectedContract
                                                   }) => {
+    const query = useQuery();
     const [isOpen, setIsOpen] = useState(false);
-    const [cookies, setCookie] = useCookies(['organistation', "rememberMe"]);
+    const [cookies, setCookie] = useCookies(['organisation', "rememberMe"]);
     const [rememberMe, setRememberMe] = useState<boolean>(cookies.rememberMe === 'true');
     const fetcher = useFetcher<RedirectResponse>();
 
@@ -46,12 +49,26 @@ export const Dropdown: React.FC<DropdownProps> = ({
         }
     }, [fetcher.data]);
 
-    const handleRedirect = (contract: Contract) => {
+    const handleRedirect = () => {
+        fetcher.submit(
+            {
+                id: selectedContract?.cardId || "",
+                target: query.get("target") ?? "https://idp.felleskomponent.no/nidp/saml2/spsend",
+                sid: query.get("sid") ?? "1234"
+            },
+            {
+                method: "post",
+                action: "/contract/redirect"
+            }
+        );
+    };
+
+    const handleRedirectAdditionalContract = (contract: Contract) => {
         fetcher.submit(
             {
                 id: contract.cardId,
-                target: "https://idp.felleskomponent.no/nidp/saml2/spsend",
-                sid: "123"
+                target: query.get("target") ?? "https://idp.felleskomponent.no/nidp/saml2/spsend",
+                sid: query.get("sid") ?? "123"
             },
             {
                 method: "post",
@@ -119,7 +136,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     disabled={!selectedContract}
                     name="rememberMe">Husk meg</Checkbox>
             </Box>
-            <Button className="w-full">Fortsett</Button>
+            <Button
+                className="w-full"
+                disabled={!selectedContract}
+                onClick={handleRedirect}
+            >Fortsett</Button>
 
             <Box as="p" className="w-full text-left font-bold pr-4 py-2 mt-5 text-base text-gray-700 hover:bg-gray-100 flex items-center">
                 Andre påloggingsalternativer:
@@ -128,7 +149,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             {contracts
                 .filter((item) => item.type === "COMMON")
                 .map((item) => (
-                    <Link as="button" key={item.cardId} className="w-full text-left pr-4 py-1 text-base text-gray-700 hover:bg-gray-100 flex items-center uppercase" onClick={() =>handleRedirect(item)} style={{ textDecoration: "none", color: "black"}}>
+                    <Link as="button" key={item.cardId} className="w-full text-left pr-4 py-1 text-base text-gray-700 hover:bg-gray-100 flex items-center uppercase" onClick={() => handleRedirectAdditionalContract(item)} style={{ textDecoration: "none", color: "black"}}>
                         {item.image && <img src={`data:${item.image.mimeType};base64,${item.image.base64Image}`} alt={item.displayName} className="w-8 h-8 mr-2"/>}{item.displayName}
                     </Link>
                 ))
