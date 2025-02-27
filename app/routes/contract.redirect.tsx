@@ -1,33 +1,24 @@
-import {ActionFunction} from "@remix-run/node";
+import {ActionFunction, LoaderFunction, redirect, redirectDocument} from "@remix-run/node";
+
+export const loader: LoaderFunction = async ({ request }) => {
+    const url = new URL(request.url);
+    return redirect(`/?${url.searchParams.toString()}`, 301);
+};
 
 export const action: ActionFunction = async ({request}) => {
     const formData = await request.formData();
     console.log(formData);
-    const id = formData.get("id");
-    const target = formData.get("target");
-    const sid = formData.get("sid");
 
-    if (!id || typeof  id !== "string") {
-        return new Response(JSON.stringify({ error: "Missing contract ID" }), {
-            status: 400,
-            headers: { "Content-Type": "application/json" },
-        })
+    const queryParams = new URLSearchParams({
+        sid: formData.get("sid")?.toString() ?? "",
+        target: formData.get("target")?.toString() ?? ""
+    });
+
+    if (!formData.get("contractId") || !formData.get("sid") || !formData.get("target")) {
+        return redirect(`/?${queryParams.toString()}`, );
     }
 
-    const baseUrl: URL = new URL("https://idp.felleskomponent.no/nidp/saml2/spsend");
-
-    if (id) baseUrl.searchParams.append("id", id.toString());
-    if (target) baseUrl.searchParams.append("target", target.toString());
-    if (sid) baseUrl.searchParams.append("sid", sid.toString());
-
-    console.log("Redirecting to:", baseUrl.toString());
-
-
-
-    // Test med return/redirect evt 302.
-    // Trenger ikke sende med body.
-    return new Response(JSON.stringify({ url: baseUrl.toString() }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-    });
+    queryParams.append("id", formData.get("contractId") as string);
+    //TODO: Move url to env/config
+    return redirectDocument(`https://idp.felleskomponent.no/nidp/saml2/spsend?${queryParams.toString()}`, 302);
 };

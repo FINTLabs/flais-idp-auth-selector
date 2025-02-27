@@ -9,24 +9,24 @@ import useQuery from "~/hooks/useQuery";
 interface DropdownProps {
     contracts: Contract[];
     selectedContract: Contract | null;
-    setSelectedContract: (contract: Contract | null) => void;
+    setSelectedContract: (contract: Contract) => void;
 }
 
-type RedirectResponse = {
-    url: string;
-    sid: string;
-}
+// type RedirectResponse = {
+//     url: string;
+//     sid: string;
+// }
 
 export const Dropdown: React.FC<DropdownProps> = ({
                                                       contracts,
                                                       selectedContract,
                                                       setSelectedContract
                                                   }) => {
-    const query = useQuery();
+    // const query = useQuery();
     const [isOpen, setIsOpen] = useState(false);
-    const [cookies, setCookie] = useCookies(['organisation', "rememberMe"]);
-    const [rememberMe, setRememberMe] = useState<boolean>(cookies.rememberMe === 'true');
-    const fetcher = useFetcher<RedirectResponse>();
+    //const [cookies, setCookie] = useCookies(['organisation', "rememberMe"]);
+    //const [rememberMe, setRememberMe] = useState<boolean>(cookies.rememberMe === 'true');
+    // const fetcher = useFetcher<RedirectResponse>();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -43,44 +43,44 @@ export const Dropdown: React.FC<DropdownProps> = ({
         }
     }, []);
 
-    useEffect(() => {
-        if (fetcher.data?.url) {
-            window.location.href = fetcher.data.url;
-        }
-    }, [fetcher.data]);
+    // useEffect(() => {
+    //     if (fetcher.data?.url) {
+    //         window.location.href = fetcher.data.url;
+    //     }
+    // }, [fetcher.data]);
+    //
+    // const handleRedirect = () => {
+    //     fetcher.submit(
+    //         {
+    //             id: selectedContract?.cardId || "",
+    //             target: query.get("target") ?? "https://idp.felleskomponent.no/nidp/saml2/spsend",
+    //             sid: query.get("sid") ?? "1234"
+    //         },
+    //         {
+    //             method: "post",
+    //             action: "/contract/redirect"
+    //         }
+    //     );
+    // };
+    //
+    // const handleRedirectAdditionalContract = (contract: Contract) => {
+    //     fetcher.submit(
+    //         {
+    //             id: contract.cardId,
+    //             target: query.get("target") ?? "https://idp.felleskomponent.no/nidp/saml2/spsend",
+    //             sid: query.get("sid") ?? "123"
+    //         },
+    //         {
+    //             method: "post",
+    //             action: "/contract/redirect"
+    //         }
+    //     );
+    // };
 
-    const handleRedirect = () => {
-        fetcher.submit(
-            {
-                id: selectedContract?.cardId || "",
-                target: query.get("target") ?? "https://idp.felleskomponent.no/nidp/saml2/spsend",
-                sid: query.get("sid") ?? "1234"
-            },
-            {
-                method: "post",
-                action: "/contract/redirect"
-            }
-        );
-    };
-
-    const handleRedirectAdditionalContract = (contract: Contract) => {
-        fetcher.submit(
-            {
-                id: contract.cardId,
-                target: query.get("target") ?? "https://idp.felleskomponent.no/nidp/saml2/spsend",
-                sid: query.get("sid") ?? "123"
-            },
-            {
-                method: "post",
-                action: "/contract/redirect"
-            }
-        );
-    };
-
-    const handleRememberMe = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRememberMe(event.target.checked);
-        setCookie('rememberMe', event.target.checked, {maxAge: 31556926})
-    }
+    // const handleRememberMe = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setRememberMe(event.target.checked);
+    //     setCookie('rememberMe', event.target.checked, {maxAge: 31556926})
+    // }
 
     return (
         <div className="dropdown-container relative inline-block text-left">
@@ -126,39 +126,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
                             ))}
                     </Box>
                 </Box>
-            )}
-
-            <Box>
-                <Checkbox
-                    className="mt-5"
-                    checked={rememberMe}
-                    onChange={handleRememberMe}
-                    disabled={!selectedContract}
-                    name="rememberMe">Husk meg</Checkbox>
-            </Box>
-            <Button
-                className="w-full"
-                disabled={!selectedContract}
-                onClick={handleRedirect}
-            >Fortsett</Button>
-
-            <Box as="p" className="w-full text-left font-bold pr-4 py-2 mt-5 text-base text-gray-700 hover:bg-gray-100 flex items-center">
-                Andre påloggingsalternativer:
-            </Box>
-
-            {contracts
-                .filter((item) => item.type === "COMMON")
-                .map((item) => (
-                    <Link as="button" key={item.cardId} className="w-full text-left pr-4 py-1 text-base text-gray-700 hover:bg-gray-100 flex items-center uppercase" onClick={() => handleRedirectAdditionalContract(item)} style={{ textDecoration: "none", color: "black"}}>
-                        {item.image && <img src={`data:${item.image.mimeType};base64,${item.image.base64Image}`} alt={item.displayName} className="w-8 h-8 mr-2"/>}{item.displayName}
-                    </Link>
-                ))
-            }
-
-            {fetcher.data?.url && (
-                <a href={fetcher.data.url} target="_blank" rel="noopener noreferrer">
-                    Gå til: {fetcher.data.url}
-                </a>
             )}
         </div>
     );
