@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from "react";
+import React, { useEffect } from "react";
 import { Contract } from "~/utils/contractsLoader";
 import {Box, Button, Checkbox} from "@navikt/ds-react";
 import {useCookies} from "react-cookie";
@@ -36,22 +36,22 @@ export const Customer: React.FC<CustomerProps> = ({ contracts, submit }) => {
     return (
         <Box>
             <Dropdown
-                contracts={contracts}
-                selectedContract={selectedContract}
-                setSelectedContract={handleSelectContract}
+                contracts={ contracts }
+                selectedContract={ selectedContract }
+                setSelectedContract={ handleSelectContract }
             />
             <Box>
                 <Checkbox
                     className="mt-5"
-                    checked={rememberMe}
-                    onChange={handleRememberMe}
-                    disabled={!selectedContract}
+                    checked={ rememberMe }
+                    onChange={ handleRememberMe }
+                    disabled={ !selectedContract }
                     name="rememberMe">Husk meg</Checkbox>
             </Box>
             <Button
                 className="w-full"
-                disabled={!selectedContract}
-                onClick={() => submit(selectedContract?.cardId as string)}
+                disabled={ !selectedContract }
+                onClick={ () => submit(selectedContract?.cardId as string) }
             >Fortsett</Button>
         </Box>
     );

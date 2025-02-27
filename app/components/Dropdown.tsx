@@ -1,9 +1,6 @@
-import {Contract} from "~/utils/contractsLoader";
+import { Contract } from "~/utils/contractsLoader";
 import React, {useEffect, useState} from "react";
-import {Box, Button, Link, Checkbox} from "@navikt/ds-react";
-import {useFetcher} from "@remix-run/react";
-import {useCookies} from "react-cookie";
-import useQuery from "~/hooks/useQuery";
+import { Box } from "@navikt/ds-react";
 
 
 interface DropdownProps {
@@ -12,21 +9,13 @@ interface DropdownProps {
     setSelectedContract: (contract: Contract) => void;
 }
 
-// type RedirectResponse = {
-//     url: string;
-//     sid: string;
-// }
-
 export const Dropdown: React.FC<DropdownProps> = ({
                                                       contracts,
                                                       selectedContract,
                                                       setSelectedContract
                                                   }) => {
-    // const query = useQuery();
+
     const [isOpen, setIsOpen] = useState(false);
-    //const [cookies, setCookie] = useCookies(['organisation', "rememberMe"]);
-    //const [rememberMe, setRememberMe] = useState<boolean>(cookies.rememberMe === 'true');
-    // const fetcher = useFetcher<RedirectResponse>();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -43,50 +32,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
         }
     }, []);
 
-    // useEffect(() => {
-    //     if (fetcher.data?.url) {
-    //         window.location.href = fetcher.data.url;
-    //     }
-    // }, [fetcher.data]);
-    //
-    // const handleRedirect = () => {
-    //     fetcher.submit(
-    //         {
-    //             id: selectedContract?.cardId || "",
-    //             target: query.get("target") ?? "https://idp.felleskomponent.no/nidp/saml2/spsend",
-    //             sid: query.get("sid") ?? "1234"
-    //         },
-    //         {
-    //             method: "post",
-    //             action: "/contract/redirect"
-    //         }
-    //     );
-    // };
-    //
-    // const handleRedirectAdditionalContract = (contract: Contract) => {
-    //     fetcher.submit(
-    //         {
-    //             id: contract.cardId,
-    //             target: query.get("target") ?? "https://idp.felleskomponent.no/nidp/saml2/spsend",
-    //             sid: query.get("sid") ?? "123"
-    //         },
-    //         {
-    //             method: "post",
-    //             action: "/contract/redirect"
-    //         }
-    //     );
-    // };
-
-    // const handleRememberMe = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setRememberMe(event.target.checked);
-    //     setCookie('rememberMe', event.target.checked, {maxAge: 31556926})
-    // }
-
     return (
         <div className="dropdown-container relative inline-block text-left">
             <button
                 type="button"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={ () => setIsOpen(!isOpen) }
                 className="inline-flex justify-between w-64 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
                 aria-haspopup="true"
             >
@@ -110,16 +60,16 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     <Box as="ul" className="py-1">
                         <DropdownItem
                             text="Velg tilhørlighet"
-                            onSelect={() => setIsOpen(false)}
+                            onSelect={ () => setIsOpen(false) }
                         />
                         {contracts
                             .filter((item) => item.type === "CUSTOMER")
                             .map((item) => (
                                 <DropdownItem
-                                    key={item.cardId}
-                                    contract={item}
+                                    key={ item.cardId }
+                                    contract={ item }
                                     onSelect={() => {
-                                        setSelectedContract(item);
+                                        setSelectedContract( item );
                                         setIsOpen(false);
                                     }}
                                 />
@@ -138,7 +88,7 @@ interface DropdownItemProps {
     children?: React.ReactNode;
 }
 
-const DropdownItem: React.FC<DropdownItemProps> = ({contract, text, onSelect}) => {
+const DropdownItem: React.FC<DropdownItemProps> = ({ contract, text, onSelect }) => {
     if (!contract && !text) {
         throw new Error("DropdownItem må ha enten 'contract' eller 'text'");
     }
@@ -150,13 +100,13 @@ const DropdownItem: React.FC<DropdownItemProps> = ({contract, text, onSelect}) =
             >
                 {contract?.image && (
                     <img
-                        src={`data:${contract.image.mimeType};base64,${contract.image.base64Image}`}
-                        alt={contract.displayName}
+                        src={`data:${ contract.image.mimeType };base64,${ contract.image.base64Image }`}
+                        alt={ contract.displayName }
                         className="w-10 h-10 mr-3 rounded-full"
                     />
                 )}
 
-                {text || contract?.displayName}
+                { text || contract?.displayName }
             </button>
         </li>
 

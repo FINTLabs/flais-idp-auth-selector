@@ -25,7 +25,7 @@ export async function contractsLoader() {
 
         const response = await fetch("http://localhost:8080/api/idp-contracts");
         if (!response.ok) {
-            console.error(`Failed to fetch contracts. Status: ${response.status}`);
+            console.error(`Failed to fetch contracts. Status: ${ response.status }`);
             throw new Error("Failed to fetch contracts from IDP");
         }
 

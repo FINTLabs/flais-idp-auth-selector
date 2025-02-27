@@ -7,5 +7,5 @@ interface LogoProps {
 }
 
 export const Logo: React.FC<LogoProps> = ({ src, width }) => (
-    <img src={src} alt="Novari logo" width={width}/>
+    <img src={ src } alt="Novari logo" width={ width }/>
 );

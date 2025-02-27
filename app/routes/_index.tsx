@@ -50,8 +50,8 @@ export default function Index() {
                 }}
             >
                 <Header />
-                <Customer contracts={customerContracts} submit={submitContract} />
-                <Common contracts={commonContracts} submit={submitContract} />
+                <Customer contracts={ customerContracts } submit={ submitContract } />
+                <Common contracts={ commonContracts } submit={ submitContract } />
             </div>
         </div>
     );

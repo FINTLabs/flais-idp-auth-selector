@@ -2,10 +2,10 @@ import {ActionFunction, LoaderFunction, redirect, redirectDocument} from "@remix
 
 export const loader: LoaderFunction = async ({ request }) => {
     const url = new URL(request.url);
-    return redirect(`/?${url.searchParams.toString()}`, 301);
+    return redirect(`/?${ url.searchParams.toString() }`, 301);
 };
 
-export const action: ActionFunction = async ({request}) => {
+export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData();
     console.log(formData);
 
@@ -15,10 +15,10 @@ export const action: ActionFunction = async ({request}) => {
     });
 
     if (!formData.get("contractId") || !formData.get("sid") || !formData.get("target")) {
-        return redirect(`/?${queryParams.toString()}`, );
+        return redirect(`/?${ queryParams.toString() }`, );
     }
 
     queryParams.append("id", formData.get("contractId") as string);
     //TODO: Move url to env/config
-    return redirectDocument(`https://idp.felleskomponent.no/nidp/saml2/spsend?${queryParams.toString()}`, 302);
+    return redirectDocument(`https://idp.felleskomponent.no/nidp/saml2/spsend?${ queryParams.toString() }`, 302);
 };
