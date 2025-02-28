@@ -42,14 +42,15 @@ export const Customer: React.FC<CustomerProps> = ({ contracts, submit }) => {
             />
             <Box>
                 <Checkbox
-                    className="mt-5"
+                    className="mt-5 checkbox"
                     checked={ rememberMe }
                     onChange={ handleRememberMe }
                     disabled={ !selectedContract }
-                    name="rememberMe">Husk meg</Checkbox>
+                    name="rememberMe"
+                >Husk meg</Checkbox>
             </Box>
             <Button
-                className="w-full"
+                className="w-full button-style"
                 disabled={ !selectedContract }
                 onClick={ () => submit(selectedContract?.cardId as string) }
             >Fortsett</Button>

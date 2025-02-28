@@ -1,3 +1,5 @@
+@import "@navikt/ds-tokens";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,14 +14,33 @@ body {
 }
 
 .purple-heading.navds-heading {
-    font-weight: 900;
+    font-weight: 800;
     font-size: 2.875rem;
     line-height: 2.875rem;
     color: #8c1950;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 
 .italic-heading.navds-heading {
     font-style: italic;
+    font-size: 1rem;
     font-weight: 400;
+    margin-bottom: 1rem;
+}
+button {
+    --__ac-button-primary-bg: #f19b89;
+    --ac-button-primary-hover-bg: #f19b89;
+    --ac-button-primary-hover-color: rgba(0, 0, 0, 0.78);
+    --ac-button-primary-active-bg: #f19b89;
+    --ac-button-primary-active-color: rgba(0, 0, 0, 0.78);
+}
+
+.checkbox {
+    --ac-radio-checkbox-bg: white;
+    --ac-radio-checkbox-border: rgba(0, 0, 0, 0.78);
+    --ac-radio-checkbox-action: #f19b89;
+    --ac-radio-checkbox-action-hover-bg: white;
+    --ac-radio-checkbox-error-border: white;
+    --ac-radio-checkbox-error-hover-bg: white;
+    -webkit-text-fill-color: black;
 }

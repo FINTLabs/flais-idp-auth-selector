@@ -5,7 +5,7 @@ export const Header = () => {
     return (
         <VStack align="center" className="font-sans">
             <Logo src="/images/novari_logo_small.png" width={250}/>
-            <Box padding="5" maxWidth="text" as="header">
+            <Box maxWidth="text" as="header" className="header">
                 <Box>
                     <Heading
                         level="1"

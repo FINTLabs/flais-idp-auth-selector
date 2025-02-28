@@ -42,11 +42,9 @@ export default function Index() {
         >
             <div
                 style={{
-                    borderStyle: "solid",
-                    borderWidth: "2px",
-                    borderColor: "rgb(248, 236, 219)",
+                    border: "2px solid rgb(248, 236, 219)",
+                    borderRadius: "4px",
                     padding: "2rem",
-                    textAlign: "center",
                 }}
             >
                 <Header />
