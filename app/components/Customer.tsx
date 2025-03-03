@@ -42,11 +42,12 @@ export const Customer: React.FC<CustomerProps> = ({ contracts, submit }) => {
             />
             <Box>
                 <Checkbox
-                    className="mt-5 checkbox"
-                    checked={ rememberMe }
-                    onChange={ handleRememberMe }
-                    disabled={ !selectedContract }
-                    name="rememberMe"
+                  className="mt-5 checkbox"
+                  checked={ rememberMe }
+                  onChange={ handleRememberMe }
+                  disabled={ !selectedContract }
+                  name="rememberMe"
+                  value="remember"
                 >Husk meg</Checkbox>
             </Box>
             <Button
