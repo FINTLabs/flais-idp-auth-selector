@@ -79,7 +79,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
             {contracts
               .filter((item) => item.type === "CUSTOMER")
               .map((item) => (
-                <>
                   <DropdownItem
                     key={item.cardId}
                     contract={item}
@@ -87,7 +86,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
                       setSelectedContract(item);
                       setIsOpen(false);
                     }}/>
-                </>
               ))}
           </Box>
         </Box>
