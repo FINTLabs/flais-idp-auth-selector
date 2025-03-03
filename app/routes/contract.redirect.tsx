@@ -1,4 +1,5 @@
 import {ActionFunction, LoaderFunction, redirect, redirectDocument} from "@remix-run/node";
+import {ENV} from "../../env.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
     const url = new URL(request.url);
@@ -20,5 +21,5 @@ export const action: ActionFunction = async ({ request }) => {
 
     queryParams.append("id", formData.get("contractId") as string);
     //TODO: Move url to env/config
-    return redirectDocument(`https://idp.felleskomponent.no/nidp/saml2/spsend?${ queryParams.toString() }`, 302);
+    return redirectDocument(`${ENV.BASE_URL}?${ queryParams.toString() }`, 302);
 };
