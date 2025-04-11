@@ -1,5 +1,5 @@
 import {Contract} from "~/utils/contractsLoader";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Box} from "@navikt/ds-react";
 import {DropdownItem} from "~/components/DropdownItem";
 import ArrowDown from "~/components/icons/ArrowDown";
@@ -22,10 +22,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
                                                   }) => {
 
   const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (!(event.target as HTMLElement).closest(".dropdown-container")) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -39,7 +40,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const filteredContracts = filterFn ? contracts.filter(filterFn) : contracts;
 
   return (
-    <div className="dropdown-container relative inline-block text-left w-full">
+    <div
+      ref={containerRef}
+      className="relative inline-block text-left w-full">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
