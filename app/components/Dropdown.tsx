@@ -9,21 +9,23 @@ interface DropdownProps {
   contracts: Contract[];
   selectedContract: Contract | null;
   setSelectedContract: (contract: Contract) => void;
+  placeholder?: string;
+  filterFn?: (contract: Contract) => boolean;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
                                                     contracts,
                                                     selectedContract,
-                                                    setSelectedContract
+                                                    setSelectedContract,
+                                                    placeholder = "Velg tilhørlighet",
+                                                    filterFn,
                                                   }) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        !(event.target as HTMLElement).closest(".dropdown-container")
-      ) {
+      if (!(event.target as HTMLElement).closest(".dropdown-container")) {
         setIsOpen(false);
       }
     };
@@ -33,6 +35,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
       document.removeEventListener("mousedown", handleClickOutside);
     }
   }, []);
+
+  const filteredContracts = filterFn ? contracts.filter(filterFn) : contracts;
 
   return (
     <div className="dropdown-container relative inline-block text-left w-full">
@@ -53,29 +57,27 @@ export const Dropdown: React.FC<DropdownProps> = ({
             {selectedContract.displayName}
           </>
         ) : (
-          "Velg tilhørlighet"
+          placeholder
         )}
         </span>
-        <ArrowDown />
+        <ArrowDown/>
       </button>
 
       {isOpen && (
         <Box as="div" className="absolute w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
           <Box as="ul" className="py-1">
             <DropdownItem
-              text="Velg tilhørlighet"
+              text={placeholder}
               onSelect={() => setIsOpen(false)}
             />
-            {contracts
-              .filter((item) => item.type === "CUSTOMER")
-              .map((item) => (
-                  <DropdownItem
-                    key={item.cardId}
-                    contract={item}
-                    onSelect={() => {
-                      setSelectedContract(item);
-                      setIsOpen(false);
-                    }}/>
+            {filteredContracts.map((item) => (
+                <DropdownItem
+                  key={item.cardId}
+                  contract={item}
+                  onSelect={() => {
+                    setSelectedContract(item);
+                    setIsOpen(false);
+                  }}/>
               ))}
           </Box>
         </Box>

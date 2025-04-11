@@ -14,6 +14,8 @@ export const Customer: React.FC<CustomerProps> = ({ contracts, submit }) => {
     const [cookies, setCookies] = useCookies(['rememberOrganisation']);
     const [selectedContract, setSelectedContract] = React.useState<Contract | null>(null);
 
+    const customerContractsOnly = (contract: Contract) => contract.type === "CUSTOMER";
+
     const rememberMe = React.useMemo(() => cookies.rememberOrganisation != null, [cookies.rememberOrganisation]);
 
     useEffect(() => {
@@ -39,6 +41,8 @@ export const Customer: React.FC<CustomerProps> = ({ contracts, submit }) => {
                 contracts={ contracts }
                 selectedContract={ selectedContract }
                 setSelectedContract={ handleSelectContract }
+                placeholder="Velg tilhørlighet"
+                filterFn={customerContractsOnly}
             />
             <Box>
                 <Checkbox
