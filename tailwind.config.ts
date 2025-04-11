@@ -1,16 +1,17 @@
 import type { Config } from "tailwindcss";
+import {PluginAPI} from "tailwindcss/types/config";
 
-export default {
+const config: Config = {
   content: ["./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Nunito Sans', 'sans-serif',],
+        sans: "var(--font-sans)",
       },
     },
   },
   plugins: [
-      function ({ addBase }: { addBase: (styles: Record<string, any>) => void }) {
+      function ({ addBase }: PluginAPI) {
           addBase({
               body: {
                   '@apply font-sans antialiased': {},
@@ -20,4 +21,6 @@ export default {
           })
       }
   ],
-} satisfies Config;
+};
+
+export default config;

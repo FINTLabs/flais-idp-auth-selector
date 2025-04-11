@@ -20,6 +20,5 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     queryParams.append("id", formData.get("contractId") as string);
-    //TODO: Move url to env/config
     return redirectDocument(`${ENV.BASE_URL}?${ queryParams.toString() }`, 302);
 };

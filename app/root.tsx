@@ -3,12 +3,21 @@ import {
     Meta,
     Outlet,
     Scripts,
-    ScrollRestoration,
+    ScrollRestoration
 } from "@remix-run/react";
+import { LinksFunction } from "@remix-run/node";
 
 import "@navikt/ds-css/dist/index.css";
 import "./tailwind.css";
+import "./styles/fonts.css";
 import {Page} from "@navikt/ds-react";
+
+export const links: LinksFunction = () => [
+  {
+    rel: "stylesheet",
+    href: "https://fonts.cdnfonts.com/css/brockmann",
+  }
+];
 
 export function Layout() {
     return (
@@ -19,10 +28,6 @@ export function Layout() {
             <title>Flais IDP Auth Selector</title>
             <Meta/>
             <Links/>
-            <link
-                href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap"
-                rel="stylesheet"
-            />
         </head>
         <body>
         <Page>
