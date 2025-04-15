@@ -23,6 +23,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const menuRef = useRef<HTMLUListElement | null>(null);
+
+  const filteredContracts = filterFn ? contracts.filter(filterFn) : contracts;
+  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,7 +41,37 @@ export const Dropdown: React.FC<DropdownProps> = ({
     }
   }, []);
 
-  const filteredContracts = filterFn ? contracts.filter(filterFn) : contracts;
+  useEffect(() => {
+    if (isOpen && itemRefs.current[1]) {
+      itemRefs.current[1].focus();
+    }
+  }, [isOpen]);
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (!isOpen) return;
+
+    const focusables = itemRefs.current;
+    const currentIndex = focusables.findIndex((el) => el === document.activeElement);
+
+    switch (event.key) {
+      case "ArrowDown": {
+        event.preventDefault();
+        const next = (currentIndex + 1) % focusables.length;
+        focusables[next]?.focus();
+        break;
+      }
+      case "ArrowUp": {
+        event.preventDefault();
+        const previous = (currentIndex - 1 + focusables.length) % focusables.length;
+        focusables[previous]?.focus();
+        break;
+      }
+      case "Escape": {
+        setIsOpen(false);
+        break;
+      }
+    }
+  };
 
   return (
     <div
@@ -45,9 +79,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
       className="relative inline-block text-left w-full">
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex justify-between w-full h-16 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
-        aria-haspopup="true"
+        onClick={() => setIsOpen((previous) => !previous)}
+        className="inline-flex justify-between w-full h-16 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible: ring-blue-500"
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-controls="dropdown-menu"
       >
         <span className="flex items-center">
         {selectedContract ? (
@@ -68,20 +104,32 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
       {isOpen && (
         <Box as="div" className="absolute w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-          <Box as="ul" className="py-1">
+          <Box
+            as="ul"
+            id="dropdown-menu"
+            ref={menuRef}
+            role="menu"
+            aria-label="Tilhørlighet"
+            tabIndex={-1}
+            onKeyDown={handleKeyDown}
+            className="py-1 focus:outline-none">
             <DropdownItem
               text={placeholder}
               onSelect={() => setIsOpen(false)}
+              ref={(el) => (itemRefs.current[0] = el)}
             />
-            {filteredContracts.map((item) => (
-                <DropdownItem
-                  key={item.cardId}
-                  contract={item}
-                  onSelect={() => {
-                    setSelectedContract(item);
-                    setIsOpen(false);
-                  }}/>
-              ))}
+            {filteredContracts.map((item, index) => (
+              <DropdownItem
+                key={item.cardId}
+                contract={item}
+                onSelect={() => {
+                  setSelectedContract(item);
+                  setIsOpen(false);
+                }}
+                isSelected={item.cardId === selectedContract?.cardId}
+                ref={(el) => (itemRefs.current[index + 1] = el)}
+              />
+            ))}
           </Box>
         </Box>
       )}
