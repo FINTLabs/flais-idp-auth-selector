@@ -70,6 +70,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
         setIsOpen(false);
         break;
       }
+      case "Tab": {
+        setIsOpen(false);
+        break;
+      }
     }
   };
 
