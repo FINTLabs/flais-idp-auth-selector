@@ -19,14 +19,16 @@ export const DropdownItem: React.FC<DropdownItemProps> = ({contract, text, onSel
         onClick={onSelect}
       >
         {contract?.image && (
+          <div className="w-1/4 flex justify-center items-center">
           <img
             src={`data:${contract.image.mimeType};base64,${contract.image.base64Image}`}
             alt={contract.displayName}
-            className="h-8 mr-3 rounded-full"
+            className="h-10 object-contain mx-auto"
           />
+        </div>
         )}
 
-        {text || contract?.displayName}
+        <span className="w-3/4"> {text || contract?.displayName}</span>
       </button>
     </li>
   );
