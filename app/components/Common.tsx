@@ -19,7 +19,7 @@ export const Common: React.FC<CommonProps> = ({ contracts, submit }) => (
         <Link
           as="button"
           key={ item.cardId }
-          className="w-full text-left pr-4 py-1 text-base text-gray-700 hover:bg-gray-100 flex items-center uppercase"
+          className="w-full text-left pr-4 py-1 text-base text-gray-700 hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:bg-white flex items-center uppercase"
           style={{ textDecoration: "none", color: "black" }}
           onClick={ () => submit(item.cardId) }
         >
