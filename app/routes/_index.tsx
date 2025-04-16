@@ -1,10 +1,10 @@
 import type {MetaFunction} from "@remix-run/node";
-import {useLoaderData} from "@remix-run/react";
+import {useLoaderData, useSearchParams, useSubmit} from "@remix-run/react";
 import {contractsLoader, Contract} from "~/utils/contractsLoader";
-import {Box} from "@navikt/ds-react";
-import {useState} from "react";
-import {Logo} from "~/components/Logo";
-import {Dropdown} from "~/components/Dropdown";
+import {useCallback} from "react";
+import {Header} from "~/components/Header";
+import {Customer} from "~/components/Customer";
+import {Common} from "~/components/Common";
 
 export const meta: MetaFunction = () => {
     return [
@@ -19,7 +19,16 @@ export async function loader() {
 
 export default function Index() {
     const contracts = useLoaderData<Contract[]>() ?? [];
-    const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
+    const [searchParams] = useSearchParams();
+    const submit = useSubmit();
+
+    const submitContract = useCallback((contractId: string) => {
+        if (!searchParams.get("target") || !searchParams.get("sid")) return;
+        submit({ contractId, sid: searchParams.get("sid"), target: searchParams.get("target") }, { action: "/contract/redirect", method: "post" });
+    }, [searchParams, submit]);
+
+    const commonContracts = contracts.filter((contract) => contract.type === "COMMON");
+    const customerContracts = contracts.filter((contract) => contract.type === "CUSTOMER");
 
     return (
         <div
@@ -33,21 +42,14 @@ export default function Index() {
         >
             <div
                 style={{
-                    borderStyle: "solid",
-                    borderWidth: "2px",
-                    borderColor: "rgb(248, 236, 219)",
+                    border: "2px solid rgb(248, 236, 219)",
+                    borderRadius: "4px",
                     padding: "2rem",
-                    textAlign: "center",
                 }}
             >
-                <Box padding="5" maxWidth="text" as="article">
-                    <Logo src="/images/novari_logo_small.png" width={250}/>
-                    <Dropdown
-                        contracts={contracts}
-                        selectedContract={selectedContract}
-                        setSelectedContract={setSelectedContract}
-                    />
-                </Box>
+                <Header />
+                <Customer contracts={ customerContracts } submit={ submitContract } />
+                <Common contracts={ commonContracts } submit={ submitContract } />
             </div>
         </div>
     );

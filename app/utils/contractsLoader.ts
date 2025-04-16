@@ -1,3 +1,5 @@
+import {ENV} from "../../env.server";
+
 export type Contract = {
     displayName: string;
     cardId: string;
@@ -23,9 +25,9 @@ export async function contractsLoader() {
 
     try {
 
-        const response = await fetch("http://localhost:8080/api/idp-contracts");
+        const response = await fetch(ENV.IDP_CONTRACTS_URL);
         if (!response.ok) {
-            console.error(`Failed to fetch contracts. Status: ${response.status}`);
+            console.error(`Failed to fetch contracts. Status: ${ response.status }`);
             throw new Error("Failed to fetch contracts from IDP");
         }
 

@@ -3,30 +3,31 @@ import {
     Meta,
     Outlet,
     Scripts,
-    ScrollRestoration,
+    ScrollRestoration
 } from "@remix-run/react";
+import { LinksFunction } from "@remix-run/node";
 
-import "./tailwind.css";
 import "@navikt/ds-css/dist/index.css";
+import "./tailwind.css";
+import "./styles/fonts.css";
 import {Page} from "@navikt/ds-react";
+
+export const links: LinksFunction = () => [
+  {
+    rel: "stylesheet",
+    href: "https://fonts.cdnfonts.com/css/brockmann",
+  }
+];
 
 export function Layout() {
     return (
-        <html lang="en">
+        <html lang="en" className="font-sans">
         <head>
             <meta charSet="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <title>Flais IDP Auth Selector</title>
             <Meta/>
             <Links/>
-            <link
-                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-                rel="stylesheet"
-            />
-            <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-            />
         </head>
         <body>
         <Page>
